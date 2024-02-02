@@ -37,6 +37,9 @@ def test_byte_string_parser(input_value, expected_output) -> None:
         pytest.param(
             b"i234e4:aaaa", [234, b"aaaa"], id="integer followed by byte string"
         ),
+        pytest.param(
+            b"l4:spami42eei123e", [[b"spam", 42], 123], id="list and an integer"
+        ),
     ],
 )
 def test_parse(input_value, expected_output) -> None:

@@ -44,8 +44,14 @@ def parse_byte_string(value: bytes) -> tuple[bytes, bytes]:
 
 
 def parse_list(value: bytes) -> tuple[list[Any], bytes]:
-    list_contents = value[1:]  # Strip off the 'l' prefix
-    raise NotImplementedError("finish this")
+    value = value[1:]  # Strip off the 'l' prefix
+    list_contents = []
+    while value[0] != ord("e"):
+        parser = identify_parser(value)
+        list_entry, value = parser(value)
+        list_contents.append(list_entry)
+    # Return the parsed list and strip the 'e' suffix off the remaining data
+    return list_contents, value[1:]
 
 
 def parse_dictionary(value: bytes) -> tuple[list[Any], bytes]:
