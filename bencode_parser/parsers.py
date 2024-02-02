@@ -20,3 +20,11 @@ def parse_byte_string(value: bytes) -> tuple[bytes, bytes]:
         value[starting_point : starting_point + content_length],
         value[starting_point + content_length :],
     )
+
+
+def parse_list(value: bytes) -> tuple[list[Any], bytes]:
+    raise NotImplementedError("finish this")
+
+
+def parse_dictionary(value: bytes) -> tuple[list[Any], bytes]:
+    raise NotImplementedError("finish this")
