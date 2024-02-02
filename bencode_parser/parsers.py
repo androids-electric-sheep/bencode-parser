@@ -11,6 +11,12 @@ def parse_integer(value: bytes) -> tuple[int, bytes]:
 
 
 def parse_byte_string(value: bytes) -> tuple[bytes, bytes]:
-    if not re.match(b"^[0-9]+:.+", value):
+    content_length_match = re.match(b"^([0-9]+):.+", value)
+    if not content_length_match:
         raise ValueError("Invalid input format")
-    raise NotImplementedError("blah")
+    content_length = int(content_length_match.group(1))
+    starting_point = len(str(content_length)) + 1
+    return (
+        value[starting_point : starting_point + content_length],
+        value[starting_point + content_length :],
+    )
