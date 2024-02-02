@@ -18,7 +18,7 @@ def identify_decoder(encoded_string: bytes) -> Callable[[bytes], tuple[Any, byte
         return decode_dictionary
     elif encoded_string[0] == ord("l"):
         return decode_list
-    else:
+    else:  # TODO: Make this a more specific check and raise a ValueError if it fails it
         return decode_byte_string
 
 
