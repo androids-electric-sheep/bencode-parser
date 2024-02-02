@@ -49,10 +49,10 @@ def test_decode_dictionary(input_value, expected_output) -> None:
     ["input_value", "expected_output"],
     [
         pytest.param(
-            b"i234e4:aaaa", [234, b"aaaa"], id="integer followed by byte string"
+            b"i234e4:aaaa", (234, b"4:aaaa"), id="integer followed by byte string"
         ),
         pytest.param(
-            b"l4:spami42eei123e", [[b"spam", 42], 123], id="list and an integer"
+            b"l4:spami42eei123e", ([b"spam", 42], b"i123e"), id="list and an integer"
         ),
     ],
 )
@@ -63,6 +63,7 @@ def test_parse(input_value, expected_output) -> None:
 def test_parse_with_input_file(torrent_file) -> None:
     with open(torrent_file, "rb") as in_fh:
         data = in_fh.read()
-    parsed_input = decoders.decode(data)
-    assert len(parsed_input) == 1 and isinstance(parsed_input[0], dict)
-    assert len(parsed_input[0]) == 9
+    parsed_input, remaining_string = decoders.decode(data)
+    assert remaining_string == b""
+    assert isinstance(parsed_input, dict)
+    assert len(parsed_input) == 9

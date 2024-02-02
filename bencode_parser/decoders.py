@@ -2,13 +2,10 @@ import re
 from typing import Any, Callable
 
 
-def decode(encoded_string: bytes) -> list[Any]:
-    pieces = []
-    while encoded_string:
-        decoder = identify_decoder(encoded_string)
-        piece, encoded_string = decoder(encoded_string)
-        pieces.append(piece)
-    return pieces
+def decode(encoded_string: bytes) -> tuple[Any, bytes]:
+    decoder = identify_decoder(encoded_string)
+    piece, encoded_string = decoder(encoded_string)
+    return piece, encoded_string
 
 
 def identify_decoder(encoded_string: bytes) -> Callable[[bytes], tuple[Any, bytes]]:
@@ -49,8 +46,7 @@ def decode_list(encoded_string: bytes) -> tuple[list[Any], bytes]:
     encoded_string = encoded_string[1:]  # Strip off the 'l' prefix
     list_contents = []
     while encoded_string[0] != ord("e"):
-        decoder = identify_decoder(encoded_string)
-        list_entry, encoded_string = decoder(encoded_string)
+        list_entry, encoded_string = decode(encoded_string)
         list_contents.append(list_entry)
     # Return the parsed list and strip the 'e' suffix off the remaining data
     return list_contents, encoded_string[1:]
@@ -62,10 +58,8 @@ def decode_dictionary(encoded_string: bytes) -> tuple[dict[Any, Any], bytes]:
     encoded_string = encoded_string[1:]  # Strip off the 'd' prefix
     dictionary_contents = {}
     while encoded_string[0] != ord("e"):
-        key_parser = identify_decoder(encoded_string)
-        key, encoded_string = key_parser(encoded_string)
-        value_parser = identify_decoder(encoded_string)
-        value, encoded_string = value_parser(encoded_string)
+        key, encoded_string = decode(encoded_string)
+        value, encoded_string = decode(encoded_string)
         dictionary_contents[key] = value
     # Return the parsed list and strip the 'e' prefix off the remaining data
     return dictionary_contents, encoded_string[1:]
