@@ -60,10 +60,8 @@ def test_parse(input_value, expected_output) -> None:
     assert decoders.decode(input_value) == expected_output
 
 
-def test_parse_with_input_file(data_directory) -> None:
-    target_filename = data_directory / "bbb_sunflower_1080p_60fps_normal.mp4.torrent"
-    assert target_filename.is_file(), "Input file does not exist"
-    with open(target_filename, "rb") as in_fh:
+def test_parse_with_input_file(torrent_file) -> None:
+    with open(torrent_file, "rb") as in_fh:
         data = in_fh.read()
     parsed_input = decoders.decode(data)
     assert len(parsed_input) == 1 and isinstance(parsed_input[0], dict)
