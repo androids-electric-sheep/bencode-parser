@@ -12,8 +12,8 @@ from bencode_parser import parsers
         pytest.param(b"i456e", (456, b""), id="integer with no following content"),
     ],
 )
-def test_integer_parser(input_value, expected_output) -> None:
-    assert parsers.parse_integer(input_value) == expected_output
+def test_decode_integer(input_value, expected_output) -> None:
+    assert parsers.decode_integer(input_value) == expected_output
 
 
 @pytest.mark.parametrize(
@@ -27,8 +27,8 @@ def test_integer_parser(input_value, expected_output) -> None:
         ),
     ],
 )
-def test_byte_string_parser(input_value, expected_output) -> None:
-    assert parsers.parse_byte_string(input_value) == expected_output
+def test_decode_byte_string(input_value, expected_output) -> None:
+    assert parsers.decode_byte_string(input_value) == expected_output
 
 
 @pytest.mark.parametrize(
@@ -41,8 +41,8 @@ def test_byte_string_parser(input_value, expected_output) -> None:
         )
     ],
 )
-def test_parse_dictionary(input_value, expected_output) -> None:
-    assert parsers.parse_dictionary(input_value) == expected_output
+def test_decode_dictionary(input_value, expected_output) -> None:
+    assert parsers.decode_dictionary(input_value) == expected_output
 
 
 @pytest.mark.parametrize(
@@ -57,7 +57,7 @@ def test_parse_dictionary(input_value, expected_output) -> None:
     ],
 )
 def test_parse(input_value, expected_output) -> None:
-    assert parsers.parse(input_value) == expected_output
+    assert parsers.decode(input_value) == expected_output
 
 
 def test_parse_with_input_file(data_directory) -> None:
@@ -65,6 +65,6 @@ def test_parse_with_input_file(data_directory) -> None:
     assert target_filename.is_file(), "Input file does not exist"
     with open(target_filename, "rb") as in_fh:
         data = in_fh.read()
-    parsed_input = parsers.parse(data)
+    parsed_input = parsers.decode(data)
     assert len(parsed_input) == 1 and isinstance(parsed_input[0], dict)
     assert len(parsed_input[0]) == 9
