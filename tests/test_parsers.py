@@ -29,3 +29,15 @@ def test_integer_parser(input_value, expected_output) -> None:
 )
 def test_byte_string_parser(input_value, expected_output) -> None:
     assert parsers.parse_byte_string(input_value) == expected_output
+
+
+@pytest.mark.parametrize(
+    ["input_value", "expected_output"],
+    [
+        pytest.param(
+            b"i234e4:aaaa", [234, b"aaaa"], id="integer followed by byte string"
+        ),
+    ],
+)
+def test_parse(input_value, expected_output) -> None:
+    assert parsers.parse(input_value) == expected_output
