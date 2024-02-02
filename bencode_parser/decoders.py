@@ -3,12 +3,12 @@ from typing import Any, Callable
 
 
 def decode(encoded_string: bytes) -> tuple[Any, bytes]:
-    decoder = identify_decoder(encoded_string)
+    decoder = get_decoder(encoded_string)
     piece, encoded_string = decoder(encoded_string)
     return piece, encoded_string
 
 
-def identify_decoder(encoded_string: bytes) -> Callable[[bytes], tuple[Any, bytes]]:
+def get_decoder(encoded_string: bytes) -> Callable[[bytes], tuple[Any, bytes]]:
     if encoded_string[0] == ord("i"):
         return decode_integer
     elif encoded_string[0] == ord("d"):

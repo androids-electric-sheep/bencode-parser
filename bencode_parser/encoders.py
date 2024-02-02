@@ -2,12 +2,12 @@ from typing import Any, Callable
 
 
 def encode(obj: Any) -> bytes:
-    encoder = identify_encoder(obj)
+    encoder = get_encoder(obj)
     encoded_string = encoder(obj)
     return encoded_string
 
 
-def identify_encoder(obj: Any) -> Callable[[Any], bytes]:
+def get_encoder(obj: Any) -> Callable[[Any], bytes]:
     if isinstance(obj, list):
         return encode_list
     elif isinstance(obj, dict):
