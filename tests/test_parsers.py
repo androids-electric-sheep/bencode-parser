@@ -35,6 +35,20 @@ def test_byte_string_parser(input_value, expected_output) -> None:
     ["input_value", "expected_output"],
     [
         pytest.param(
+            b"d3:bar4:spam3:fooi42ee",
+            ({b"bar": b"spam", b"foo": 42}, b""),
+            id="wikipedia example input",
+        )
+    ],
+)
+def test_parse_dictionary(input_value, expected_output) -> None:
+    assert parsers.parse_dictionary(input_value) == expected_output
+
+
+@pytest.mark.parametrize(
+    ["input_value", "expected_output"],
+    [
+        pytest.param(
             b"i234e4:aaaa", [234, b"aaaa"], id="integer followed by byte string"
         ),
         pytest.param(
@@ -44,3 +58,13 @@ def test_byte_string_parser(input_value, expected_output) -> None:
 )
 def test_parse(input_value, expected_output) -> None:
     assert parsers.parse(input_value) == expected_output
+
+
+def test_parse_with_input_file(data_directory) -> None:
+    target_filename = data_directory / "bbb_sunflower_1080p_60fps_normal.mp4.torrent"
+    assert target_filename.is_file(), "Input file does not exist"
+    with open(target_filename, "rb") as in_fh:
+        data = in_fh.read()
+    parsed_input = parsers.parse(data)
+    assert len(parsed_input) == 1 and isinstance(parsed_input[0], dict)
+    assert len(parsed_input[0]) == 9

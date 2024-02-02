@@ -54,6 +54,14 @@ def parse_list(value: bytes) -> tuple[list[Any], bytes]:
     return list_contents, value[1:]
 
 
-def parse_dictionary(value: bytes) -> tuple[list[Any], bytes]:
-    dictionary_contents = value[1:]  # Strip off the 'd' prefix
-    raise NotImplementedError("finish this")
+def parse_dictionary(value: bytes) -> tuple[dict[Any, Any], bytes]:
+    value = value[1:]  # Strip off the 'd' prefix
+    dictionary_contents = {}
+    while value[0] != ord("e"):
+        dictionary_key_parser = identify_parser(value)
+        dictionary_key, value = dictionary_key_parser(value)
+        dictionary_value_parser = identify_parser(value)
+        dictionary_value, value = dictionary_value_parser(value)
+        dictionary_contents[dictionary_key] = dictionary_value
+    # Return the parsed list and strip the 'e' prefix off the remaining data
+    return dictionary_contents, value[1:]
